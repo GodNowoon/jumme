@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>점메추</title>
+    <style>
+        /* 기본적인 스타일은 여기서! */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* 배경색 살짝 넣어봤어! */
+            color: #333;
+        }
+
+        /* 로고 영역 */
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4CAF50; /* 로고 색깔 예쁘게! */
+            margin: 0;
+        }
+
+        /* 카테고리 버튼들 영역 */
+        nav {
+            background-color: #5cb85c; /* 카테고리 바 색깔! */
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .category-buttons {
+            display: flex; /* 가로로 나열하기 위해 flex 사용! */
+            justify-content: center; /* 버튼들 가운데 정렬! */
+            list-style: none; /* 리스트 점 없애기 */
+            padding: 0;
+            margin: 0;
+            gap: 15px; /* 버튼들 사이 간격 */
+        }
+
+        .category-buttons button {
+            background-color: #4CAF50; /* 버튼 기본 색 */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px; /* 버튼 둥글게! */
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease; /* 호버 효과 부드럽게 */
+        }
+
+        .category-buttons button:hover {
+            background-color: #45a049; /* 마우스 올렸을 때 색 변경 */
+        }
+
+        /* 데이터가 표시될 영역 */
+        .content-area {
+            padding: 30px;
+            margin: 20px auto; /* 가운데 정렬 및 여백 */
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과! */
+            min-height: 300px; /* 최소 높이 설정 */
+        }
+
+        .content-area h2 {
+            color: #5cb85c;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="logo">오늘 뭐먹지? ✨</h1>
+    </header>
+
+    <nav>
+        <ul class="category-buttons">
+            <li><button data-category="한식">한식</button></li>
+            <li><button data-category="양식">양식</button></li>
+            <li><button data-category="중식">중식 🎶</button></li>
+            <li><button data-category="일식">일식 ✈️</button></li>
+            <li><button data-category="분식">분식 🍔</button></li>
+            <li><button data-category="디저트">디저트 💻</button></li>
+        </ul>
+    </nav>
+
+    <main class="content-area" id="content-display">
+        <!-- 초기 화면에 보여질 내용 -->
+        <h2>어서오세요! 카테고리를 선택해주세요 😊</h2>
+        <p>각 버튼을 누르면 이 공간에 해당 카테고리의 음식점이 짜잔~ 하고 나타날 거예요!</p>
+        <p>....... 🥳</p>
+    </main>
+
+    <script>
+        // JavaScript로 버튼 클릭 시 내용 변경하기!
+        const categoryButtons = document.querySelectorAll('.category-buttons button'); // 모든 버튼 가져오기
+        const contentDisplay = document.getElementById('content-display'); // 내용 표시될 공간 가져오기
+
+        // 각 버튼에 클릭 이벤트 추가하기
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.dataset.category; // 버튼에 설정된 카테고리 이름 가져오기
+				
+                fetch(`/jumme?category=${encodeURIComponent(category)}`)
+                .then(response => response.json()) // 또는 .json() 사용 가능
+                .then(data => {
+                	if (!Array.isArray(data)) {
+                	      console.error('응답 데이터가 배열이 아닙니다:', data);
+                	      return;
+                	}
+                	let html = "";
+                    data.forEach(jum => {
+                        html += `
+                            <h3>${jum.rname}</h3>
+                            <p>메뉴: ${jum.rmenu}</p>
+                            <p>평점: ${jum.score}</p>
+                            <a href="${jum.link}" target="_blank">홈페이지 방문</a>
+                            <hr>
+                        `;
+                    });
+                    contentDisplay.innerHTML = html; // 서버에서 받은 HTML 넣기
+                })
+                .catch(error => console.error('오류 발생:', error));
+                
+                // 여기에서 각 카테고리에 맞는 내용을 채워주면 돼!
+                let contentHTML = '';
+                switch (category) {
+                    case '한식':
+                        contentHTML = `
+                            <h2>한식 </h2>
+                            <p>..</p>
+                            <ul>
+                                <li>..</li>
+                                <li>..</li>
+                            </ul>
+                        `;
+                        break;
+                    case '양식':
+                        contentHTML = `
+                            <h2>양식 💄</h2>
+                            <p>촉촉한 피부를 위한 히알루론산 세럼과 자외선 차단제는 필수! 🌞 오늘 밤은 특별히 팩으로 피부에 영양을 듬뿍 주세요! 💆‍♀️ #꿀피부</p>
+                            <ul>
+                                <li>환절기 스킨케어 루틴</li>
+                                <li>퍼스널 컬러 진단 후 메이크업 팁</li>
+                            </ul>
+                        `;
+                        break;
+                    case '중식':
+                        contentHTML = `
+                            <h2>중식 🎶</h2>
+                            <p>새롭게 나온 인디 밴드의 신곡들을 들어보세요! 🎧 잔잔한 어쿠스틱 음악은 공부나 작업할 때 정말 좋답니다! #취향저격</p>
+                            <ul>
+                                <li>카페에서 듣기 좋은 재즈 플레이리스트</li>
+                                <li>최신 아이돌 히트곡 모음</li>
+                            </ul>
+                        `;
+                        break;
+                    case '일식':
+                        contentHTML = `
+                            <h2>일식 ✈️ !</h2>
+                            <p>이번 주말에는 가까운 근교로 당일치기 여행 어떠세요? 🏞️ 예쁜 카페에서 여유를 즐기고 맛있는 음식도 먹으면 완벽한 휴가! #여행에미치다</p>
+                            <ul>
+                                <li>제주도 숨은 명소 탐방</li>
+                                <li>해외 여행지 추천: 파리, 런던</li>
+                            </ul>
+                        `;
+                        break;
+                    case '분식':
+                        contentHTML = `
+                            <h2>분식맛집 🍔 오늘 뭐 먹지?</h2>
+                            <p>SNS에서 핫한 신상 디저트 카페와 로컬 맛집 리스트를 공개합니다! 🍰🍜 웨이팅은 필수지만 후회하지 않을 거예요! #존맛탱</p>
+                            <ul>
+                                <li>강남역 브런치 맛집 베스트 5</li>
+                                <li>제철 해산물 요리 전문점</li>
+                            </ul>
+                        `;
+                        break;
+                    case '디저트':
+                        contentHTML = `
+                            <h2>카페 💻 최신 정보</h2>
+                            <p>인공지능 기술의 발전이 정말 놀라워요! 🤖 새로운 스마트폰 출시 소식과 함께 유용한 앱 정보도 알려줄게요! #얼리어답터</p>
+                            <ul>
+                                <li>최신 스마트폰 비교 분석</li>
+                                <li>데이터 분석을 위한 파이썬 라이브러리</li>
+                            </ul>
+                        `;
+                        break;
+                    default:
+                        contentHTML = `
+                            <h2>카테고리 정보가 없어요 🥲</h2>
+                            <p>죄송해요, 아직 준비되지 않은 카테고리인가 봐요! 다른 카테고리를 선택해주세요.</p>
+                        `;
+                }
+                contentDisplay.innerHTML = contentHTML; // 내용 표시 공간에 HTML 넣기
+            });
+        });
+    </script>
+
+</body>
+</html>
