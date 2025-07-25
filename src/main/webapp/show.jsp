@@ -11,12 +11,16 @@
 
 <body>
 <h2>상암 맛집 전체 목록</h2>
+<form method="get" action="">
+    <input type="text" name="keyword" placeholder="식당 이름 검색" value="<%= request.getParameter("keyword") != null ? request.getParameter("keyword") : "" %>">
+    <input type="submit" value="keyword">
+</form>
     <table border="1">
         <tr>
-            <th>Category</th>
-            <th>Rname</th>
-            <th>Rmenu</th>
-            <th>Score</th>
+            <th>분류</th>
+            <th>식당이름</th>
+            <th>대표메뉴</th>
+            <th>평점(5점만점)</th>
             <th>Link</th>
         </tr>
         <%
